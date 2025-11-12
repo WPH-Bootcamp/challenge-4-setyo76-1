@@ -21,7 +21,10 @@ class Student {
   // - grades: Object untuk menyimpan nilai {subject: score}
   
   constructor(id, name, studentClass) {
-    // Implementasi constructor di sini
+    this.id = id;
+    this.name = name;
+    this.class = studentClass;
+    this.grades = {}; // Object untuk menyimpan nilai mata pelajaran
   }
 
   /**
@@ -31,7 +34,12 @@ class Student {
    * TODO: Validasi bahwa score harus antara 0-100
    */
   addGrade(subject, score) {
-    // Implementasi method di sini
+    // Validasi bahwa score harus antara 0-100
+    if (typeof score !== 'number' || score < 0 || score > 100) {
+      throw new Error('Nilai harus berupa angka antara 0-100');
+    }
+    
+    this.grades[subject] = score;
   }
 
   /**
@@ -40,7 +48,18 @@ class Student {
    * TODO: Hitung total nilai dibagi jumlah mata pelajaran
    */
   getAverage() {
-    // Implementasi method di sini
+    const subjects = Object.keys(this.grades);
+    
+    // Jika tidak ada mata pelajaran, return 0
+    if (subjects.length === 0) {
+      return 0;
+    }
+    
+    const total = subjects.reduce((sum, subject) => {
+      return sum + this.grades[subject];
+    }, 0);
+    
+    return total / subjects.length;
   }
 
   /**
@@ -49,7 +68,8 @@ class Student {
    * TODO: Return "Lulus" jika rata-rata >= 75, selain itu "Tidak Lulus"
    */
   getGradeStatus() {
-    // Implementasi method di sini
+    const average = this.getAverage();
+    return average >= 75 ? "Lulus" : "Tidak Lulus";
   }
 
   /**
@@ -57,7 +77,19 @@ class Student {
    * TODO: Tampilkan ID, Nama, Kelas, semua nilai, rata-rata, dan status
    */
   displayInfo() {
-    // Implementasi method di sini
+    console.log(`ID: ${this.id}`);
+    console.log(`Nama: ${this.name}`);
+    console.log(`Kelas: ${this.class}`);
+    
+    // Tampilkan semua nilai mata pelajaran
+    console.log('Mata Pelajaran:');
+    for (const subject in this.grades) {
+      console.log(`  - ${subject}: ${this.grades[subject]}`);
+    }
+    
+    // Tampilkan rata-rata dan status
+    console.log(`Rata-rata: ${this.getAverage().toFixed(2)}`);
+    console.log(`Status: ${this.getGradeStatus()}`);
   }
 }
 
